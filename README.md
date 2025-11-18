@@ -9,9 +9,11 @@ Tool that allows you to change the colors of ranks on the osu! website.
 
 ## Tutorial
 Once you open https://osu.ppy.sh/ you will see two new buttons appear at the top right of the page. 
+
 ![alt text](https://files.catbox.moe/66gmqk.png)
 
 The settings button opens a settings menu where you can select colors for every rank tier.
+
 ![alt text](https://files.catbox.moe/8xjzy3.png)
 
 The reset button resets ALL rank colors to default and refreshes the webpage.
