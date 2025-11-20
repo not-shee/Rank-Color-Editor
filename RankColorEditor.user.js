@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Rank Color Editor
-// @version      1.0
+// @version      1.2
 // @description  Allows you to modify the colors of rank on the osu! website
 // @match        http://osu.ppy.sh/*
 // @match        https://osu.ppy.sh/*
@@ -24,12 +24,18 @@
     ];
 
     ranks.forEach(rank => {
-        GM_addStyle(`
-            .rank-value--${rank} {
-                color: ${GM_getValue(rank)};
-            }
-        `);
+        const savedColor = GM_getValue(rank);
+
+        if (savedColor !== null) {
+            GM_addStyle(`
+                .rank-value--${rank} {
+                    color: ${savedColor};
+                    background-image: none;
+                }
+            `);
+        }
     });
+
 
     const observer = new MutationObserver(function(mutationList){
             for(var mutation of mutationList){
@@ -137,9 +143,11 @@
             pickerContainer.appendChild(row);
         });
 
+        pickerContainer.appendChild(createFontSizeNumberBox());
+
         const version = document.createElement('span');
         version.classList.add("version");
-        version.textContent = 'version 1.0';
+        version.textContent = 'version 1.2';
         infoContainer.appendChild(version);
 
         settings.appendChild(infoContainer);
@@ -152,12 +160,13 @@
         const picker = document.createElement('input');
         picker.type = 'color';
         picker.value = GM_getValue(currentColor, null);
-        picker.title = 'Pick a color';
+        picker.title = `Choose a color for the ${currentColor} rank`;
         picker.classList.add("rank-picker");
         picker.addEventListener("input", (e) => {
             GM_addStyle(`
             .rank-value--${currentColor} {
                 color: ${e.target.value};
+                background-image: none;
             }
             `);
         });
@@ -165,6 +174,32 @@
             GM_setValue(currentColor, e.target.value);
         });
         return picker;
+    }
+
+    function createFontSizeNumberBox (){
+        const fontSizeBoxContainer = document.createElement('div');
+        fontSizeBoxContainer.classList.add('font-size-row');
+
+        const fontText = document.createElement('span');
+        fontText.textContent = 'FontSize:';
+        fontSizeBoxContainer.appendChild(fontText);
+
+        const numberBox = document.createElement('input');
+        numberBox.type = 'number';
+        numberBox.classList.add('number-box');
+        numberBox.title = '600 - default; 300 - old; 1000 - max';
+        numberBox.addEventListener('change', (e) => {
+            ranks.forEach(rank => {
+                GM_addStyle(`
+                    .rank-value--${rank} {
+                        font-weight: ${e.target.value};
+                    }
+                `);
+            })
+        });
+        fontSizeBoxContainer.appendChild(numberBox);
+
+        return fontSizeBoxContainer;
     }
 
     GM_addStyle(`
@@ -187,7 +222,7 @@
             background: #222;
             border: 1px solid #444;
             border-radius: 8px;
-            z-index: 99999;
+            z-index: 10001;
             font-family: torus;
             display: flex;
             justify-content: space-between;
@@ -226,12 +261,30 @@
             margin-bottom: 4px;
         }
 
+        .font-size-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 4px;
+        }
+
         .rank-picker {
             width: 40px;
             height: 40px;
             border: 1px solid #444;
             cursor: pointer;
             padding: 0;
+        }
+
+        .number-box {
+           height: 38.5px;
+           width: 38.5px;
+           background: #000000;
+           border: 1px solid #808080;
+           outline: 1px solid #444
+           margin: 0;
+           -moz-appearance: textfield;
         }
         `);
 

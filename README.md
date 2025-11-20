@@ -12,10 +12,19 @@ Once you open https://osu.ppy.sh/ you will see two new buttons appear at the top
 
 ![alt text](https://files.catbox.moe/66gmqk.png)
 
-The settings button opens a settings menu where you can select colors for every rank tier.
+### Settings button
+The settings button opens a settings menu where you can select colors for every rank tier, as well as change the weight of the rank text.
 
-![alt text](https://files.catbox.moe/8xjzy3.png)
+![alt text](https://files.catbox.moe/o7sp8y.png)
 
-The reset button resets ALL rank colors to default and refreshes the webpage.
+### Default values for font size
+
+600 - the new default font size;
+
+300 - the old default font size (before rank colors were introduced);
+
+1000 - maximum allowed font size;
+### Reset button
+The reset button resets <b>ALL</b> settings to default and refreshes the webpage.
 
 Enjoy the script!!!
