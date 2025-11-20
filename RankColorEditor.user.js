@@ -13,13 +13,14 @@
     'use strict';
 
     const ranks = [
+    "iron",
     "bronze",
     "silver",
     "gold",
     "platinum",
     "rhodium",
     "radiant",
-    "lustrous"
+    "lustrous",
     ];
 
     ranks.forEach(rank => {
@@ -43,6 +44,20 @@
         childList: true,
     });
 
+    function outsideClickHandler(e) {
+        const popup = document.getElementById('settings-popup');
+
+        if (!popup) {
+            document.removeEventListener("click", outsideClickHandler);
+            return;
+        };
+
+        if (!popup.contains(e.target)) {
+            popup.remove();
+            document.removeEventListener("click", outsideClickHandler);
+        }
+    }
+
     function createResetButton() {
         const resetBtn = document.createElement('button');
         resetBtn.textContent = 'Reset';
@@ -62,13 +77,17 @@
         const openBtn = document.createElement('button');
         openBtn.textContent = 'Settings';
         openBtn.style.top = '20px';
+        openBtn.id = 'settings-button';
         openBtn.classList.add('button');
-        openBtn.addEventListener('click', () => {
+        openBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const popup = document.getElementById('settings-popup');
             if (popup) {
                 popup.remove();
+                document.removeEventListener("click", outsideClickHandler);
             } else {
                 createSettings();
+                document.addEventListener("click", outsideClickHandler);
             }
         });
 
@@ -86,6 +105,7 @@
         const title = document.createElement('span');
         title.textContent = 'Rank Color Editor';
         title.classList.add("title");
+        title.style.fontSize = '24px';
         infoContainer.appendChild(title);
 
         const author = document.createElement('span');
@@ -94,7 +114,7 @@
         const link = document.createElement('a');
         link.href = "https://www.youtube.com/@shee19";
         link.textContent = "Shee";
-        link.style.color = '#ff66ab';
+        link.style.color = "hsl(var(--hsl-h1))";
         author.appendChild(link);
 
         infoContainer.appendChild(author);
@@ -187,7 +207,6 @@
         }
 
         .title {
-            font-size: 24px;
             font-weight: bold;
         }
 
