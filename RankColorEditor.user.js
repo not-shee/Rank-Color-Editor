@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Rank Color Editor
-// @version      1.2
+// @version      1.0
 // @description  Allows you to modify the colors of rank on the osu! website
 // @match        http://osu.ppy.sh/*
 // @match        https://osu.ppy.sh/*
@@ -25,12 +25,20 @@
 
     ranks.forEach(rank => {
         const savedColor = GM_getValue(rank);
+        const savedWeight = GM_getValue('rankFontWeight', 600);
 
         if (savedColor !== null) {
             GM_addStyle(`
                 .rank-value--${rank} {
                     color: ${savedColor};
                     background-image: none;
+                }
+            `);
+        }
+        if (savedWeight !== null) {
+            GM_addStyle(`
+                .rank-value--${rank} {
+                     font-weight: ${savedWeight};
                 }
             `);
         }
@@ -74,6 +82,7 @@
                 GM_setValue(rank, null);
                 window.location.reload();
             });
+            GM_setValue('rankFontWeight', null);
         });
 
         document.body.appendChild(resetBtn);
@@ -147,7 +156,7 @@
 
         const version = document.createElement('span');
         version.classList.add("version");
-        version.textContent = 'version 1.2';
+        version.textContent = 'version 1.2.1';
         infoContainer.appendChild(version);
 
         settings.appendChild(infoContainer);
@@ -195,6 +204,7 @@
                         font-weight: ${e.target.value};
                     }
                 `);
+                GM_setValue('rankFontWeight', e.target.value);
             })
         });
         fontSizeBoxContainer.appendChild(numberBox);
