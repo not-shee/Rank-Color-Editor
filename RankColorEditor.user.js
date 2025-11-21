@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Rank Color Editor
-// @version      1.0
+// @version      1.2.2
 // @description  Allows you to modify the colors of rank on the osu! website
 // @match        http://osu.ppy.sh/*
 // @match        https://osu.ppy.sh/*
@@ -114,26 +114,6 @@
         const settings = document.createElement('div');
         settings.id = 'settings-popup';
 
-        const infoContainer = document.createElement('div');
-        infoContainer.classList.add("info-container");
-
-        const title = document.createElement('span');
-        title.textContent = 'Rank Color Editor';
-        title.classList.add("title");
-        title.style.fontSize = '24px';
-        infoContainer.appendChild(title);
-
-        const author = document.createElement('span');
-        author.textContent = 'by ';
-
-        const link = document.createElement('a');
-        link.href = "https://www.youtube.com/@shee19";
-        link.textContent = "Shee";
-        link.style.color = "hsl(var(--hsl-h1))";
-        author.appendChild(link);
-
-        infoContainer.appendChild(author);
-
         const pickerContainer = document.createElement('div');
         pickerContainer.classList.add("picker-container");
 
@@ -154,12 +134,7 @@
 
         pickerContainer.appendChild(createFontSizeNumberBox());
 
-        const version = document.createElement('span');
-        version.classList.add("version");
-        version.textContent = 'version 1.2.1';
-        infoContainer.appendChild(version);
-
-        settings.appendChild(infoContainer);
+        settings.appendChild(createInfoContainer());
         settings.appendChild(pickerContainer);
 
         document.body.appendChild(settings);
@@ -172,14 +147,19 @@
         picker.title = `Choose a color for the ${currentColor} rank`;
         picker.classList.add("rank-picker");
         picker.addEventListener("input", (e) => {
+            const rankObject = document.querySelector(`.rank-value--${currentColor}`);
+            if(rankObject){
+                rankObject.style.color = e.target.value;
+                rankObject.style.backgroundImage = 'none';
+            }
+        });
+        picker.addEventListener("change", (e) => {
             GM_addStyle(`
             .rank-value--${currentColor} {
                 color: ${e.target.value};
                 background-image: none;
             }
             `);
-        });
-        picker.addEventListener("change", (e) => {
             GM_setValue(currentColor, e.target.value);
         });
         return picker;
@@ -210,6 +190,36 @@
         fontSizeBoxContainer.appendChild(numberBox);
 
         return fontSizeBoxContainer;
+    }
+
+    function createInfoContainer(){
+        const infoContainer = document.createElement('div');
+        infoContainer.classList.add("info-container");
+
+        const title = document.createElement('span');
+        title.textContent = 'Rank Color Editor';
+        title.classList.add("title");
+        title.style.fontSize = '24px';
+        infoContainer.appendChild(title);
+
+        const author = document.createElement('span');
+        author.textContent = 'by ';
+
+        const link = document.createElement('a');
+        link.href = "https://www.youtube.com/@shee19";
+        link.textContent = "Shee";
+        link.style.color = "hsl(var(--hsl-h1))";
+        author.appendChild(link);
+
+        infoContainer.appendChild(author);
+
+        const version = document.createElement('span');
+        version.classList.add("version");
+        version.textContent = 'version 1.2.1';
+
+        infoContainer.appendChild(version);
+
+        return infoContainer;
     }
 
     GM_addStyle(`
